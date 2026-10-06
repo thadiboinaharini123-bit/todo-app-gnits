@@ -27,7 +27,6 @@ function App() {
       } catch (err) {
         showError(err);
       } finally {
-        // Stop loading whether it worked or failed
         setLoading(false);
       }
     }
@@ -46,13 +45,15 @@ function App() {
     }
   }
 
-  // Replace the edited todo with the updated version from the server
+  // Update one todo
   async function handleUpdate(id, data) {
     try {
       setError("");
       const updated = await updateTodo(id, data);
-      // TODO: Complete this. Update the `todos` state so the edited todo is
-      // replaced with `updated` (keep every other todo as it is).
+
+      setTodos((prev) =>
+        prev.map((todo) => (todo._id === id ? updated : todo))
+      );
     } catch (err) {
       showError(err);
     }
@@ -99,6 +100,7 @@ function App() {
 
     if (filteredTodos.length === 0) {
       let message = "You're all caught up. Add a task above.";
+
       if (filter === "done") {
         message = "Nothing completed yet";
       }
